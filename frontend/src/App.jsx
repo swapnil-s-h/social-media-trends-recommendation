@@ -8,22 +8,46 @@ const initialOptions = {
   layout: {
     hierarchical: false,
   },
+  physics: {
+    stabilization: true,
+    barnesHut: {
+      gravitationalConstant: -2800,
+      springLength: 150,
+      springConstant: 0.045,
+    },
+  },
   edges: {
-    color: "#888888",
+    color: {
+      color: "#4b5563",
+      highlight: "#0d94e6",
+      hover: "#1d4ed8",
+      inherit: false,
+      opacity: 0.95,
+    },
+    width: 2.5,
+    selectionWidth: 4,
+    smooth: {
+      enabled: true,
+      type: "dynamic",
+    },
   },
   nodes: {
     shape: "icon",
     icon: {
-      face: '"Font Awesome 6 Free"',
+      face: "'Font Awesome 6 Free'",
       weight: "900",
       code: "\uf007",
-      color: "#333333",
+      color: "#1f2937",
+      size: 34,
     },
     font: {
-      color: "#333333",
-      size: 14,
+      color: "#1f2937",
+      size: 15,
+      face: "Segoe UI",
+      strokeWidth: 3,
+      strokeColor: "#ffffff",
     },
-    borderWidth: 2,
+    margin: 14,
   },
   height: "600px",
 };
@@ -82,7 +106,9 @@ function App() {
 
   const formatDate = (value) => {
     const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? "Unknown time" : parsed.toLocaleString();
+    return Number.isNaN(parsed.getTime())
+      ? "Unknown time"
+      : parsed.toLocaleString();
   };
 
   const fetchGraph = async () => {
@@ -116,7 +142,8 @@ function App() {
             },
           },
           icon: {
-            color: "#ffffff",
+            color: "#111827",
+            size: 34,
           },
         };
       });
@@ -278,7 +305,8 @@ function App() {
       ) : (
         recs.map((rec) => (
           <li key={rec.name} className="rec-item">
-            <strong>{rec.name}</strong> <span>(Score: {rec.score.toFixed(2)})</span>
+            <strong>{rec.name}</strong>{" "}
+            <span>(Score: {rec.score.toFixed(2)})</span>
             {rec.reasons && <div className="reasons">Why: {rec.reasons}</div>}
           </li>
         ))
@@ -288,7 +316,9 @@ function App() {
 
   const renderTrendFeed = (feedItems) => {
     if (!feedItems || feedItems.length === 0) {
-      return <p className="empty-state">No feed items found for this user yet.</p>;
+      return (
+        <p className="empty-state">No feed items found for this user yet.</p>
+      );
     }
 
     return (
@@ -308,7 +338,8 @@ function App() {
             </div>
 
             <p className="feed-content">
-              {item.content || "Topic-only trend item. Tags are driving this recommendation."}
+              {item.content ||
+                "Topic-only trend item. Tags are driving this recommendation."}
             </p>
 
             <div className="tag-row">
@@ -351,7 +382,11 @@ function App() {
 
   const renderRecentPosts = () => {
     if (posts.length === 0) {
-      return <p className="empty-state">No feed posts yet. Publish a few posts to drive trend recommendations.</p>;
+      return (
+        <p className="empty-state">
+          No feed posts yet. Publish a few posts to drive trend recommendations.
+        </p>
+      );
     }
 
     return (
@@ -361,21 +396,23 @@ function App() {
             <div className="feed-card-header">
               <div>
                 <h5>{post.author}</h5>
-                <span className="subtle-text">{formatDate(post.createdAt)}</span>
+                <span className="subtle-text">
+                  {formatDate(post.createdAt)}
+                </span>
               </div>
               <span className="score-pill small-pill">Post #{post.id}</span>
             </div>
 
-            <p className="feed-content">
-              {post.content || "Topic-only post"}
-            </p>
+            <p className="feed-content">{post.content || "Topic-only post"}</p>
 
             <div className="tag-row">
-              {(post.tags?.length ? post.tags : post.topicTokens || []).map((tag) => (
-                <span key={`${post.id}-${tag}`} className="tag-pill">
-                  #{tag}
-                </span>
-              ))}
+              {(post.tags?.length ? post.tags : post.topicTokens || []).map(
+                (tag) => (
+                  <span key={`${post.id}-${tag}`} className="tag-pill">
+                    #{tag}
+                  </span>
+                ),
+              )}
             </div>
 
             <div className="metrics-row">
@@ -391,9 +428,23 @@ function App() {
 
   return (
     <div className="App">
+      <span
+        aria-hidden="true"
+        style={{
+          opacity: 0,
+          position: "absolute",
+          fontFamily: "'Font Awesome 6 Free'",
+          fontWeight: 900,
+        }}
+      >
+        &#xf007;
+      </span>
       <header>
         <h1>Social Graph And Trend Recommender</h1>
-        <p>Friend recommendation algorithms plus graph-aware trend/feed personalization.</p>
+        <p>
+          Friend recommendation algorithms plus graph-aware trend/feed
+          personalization.
+        </p>
       </header>
 
       <div className="container">
